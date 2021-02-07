@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     //Reference the spawn point
     public Transform spawnPoint;
 
+    // HealthBar
+    public HealthBar healthBar;
 
     /*
      * Variables
@@ -46,6 +48,7 @@ public class Player : MonoBehaviour
         health = 100;
         lives = 5;
         isDead = false;
+        healthBar.SetMaxHealth(health);
     }
 
     // Update is called once per frame
@@ -116,5 +119,7 @@ public class Player : MonoBehaviour
     void TakeDamage(int damage)
     {
         health -= damage;
+        
+        healthBar.SetHealth(health);
     }    
 }
