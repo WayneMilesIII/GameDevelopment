@@ -67,6 +67,7 @@ public class Player : MonoBehaviour
         {
             Application.Quit();
         }
+        
     }
 
     void FixedUpdate()
@@ -110,4 +111,10 @@ public class Player : MonoBehaviour
             transform.position = spawnPoint.position; 
         }
     }
+    
+    // this is the take damage method
+    void TakeDamage(int damage)
+    {
+        health -= damage;
+    }    
 }
