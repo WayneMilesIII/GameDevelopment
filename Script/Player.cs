@@ -17,7 +17,11 @@ public class Player : MonoBehaviour
     public GameObject projTemplate;
     //Reference the spawn point
     public Transform spawnPoint;
-
+    //Reference the Game Over Screen
+    public GameOverScreen gameOverScreen;
+    //Reference to Status
+    public Status status;
+    
     // HealthBar
     public HealthBar healthBar;
 
@@ -95,6 +99,7 @@ public class Player : MonoBehaviour
         if (col.gameObject.tag.Equals("Enemy")) 
         {
             health -= 10;
+            PlayerDeathCheck();
             //DO SOMETHING TO MOVE ENEMY AWAY FROM PLAYER AFTER CONTACT
         }
     }
@@ -108,7 +113,10 @@ public class Player : MonoBehaviour
             lives -= 1;
         }
 
-        if (isDead) 
+        if(lives <= 0) 
+        {
+            gameOverScreen.Setup(status.getScore());
+        } else if(isDead)
         {
             isDead = false;
             transform.position = spawnPoint.position; 
