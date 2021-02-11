@@ -22,4 +22,8 @@ public class Status : MonoBehaviour
         scoreState.text = "SCORE: " + playerScore;
         livesCount.text = "LIVES: " + playerLives;
     }
+    
+    public int getScore() {
+        return playerScore;
+    }
 }
