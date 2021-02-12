@@ -15,6 +15,10 @@ public class Player : MonoBehaviour
     public Transform Projectile_Spawner;
     //Reference to projectile template for projectile spawning
     public GameObject projTemplate;
+    //Reference the Game Over Screen
+    public GameOverScreen gameOverScreen;
+    //Reference to Status
+    public Status status;
 
     /*
      * Variables
@@ -90,6 +94,7 @@ public class Player : MonoBehaviour
         if (col.gameObject.tag.Equals("Enemy"))
         {
             health -= 10;
+            PlayerDeathCheck();
             //DO SOMETHING TO MOVE ENEMY AWAY FROM PLAYER AFTER CONTACT
         }
     }
@@ -101,6 +106,14 @@ public class Player : MonoBehaviour
             isDead = true;
             health += 100;
             lives -= 1;
+        }
+        if(lives <= 0) 
+        {
+            gameOverScreen.Setup(status.getScore());
+        } else if(isDead)
+        {
+            isDead = false;
+            transform.position = spawnPoint.position; 
         }
     }
 }
