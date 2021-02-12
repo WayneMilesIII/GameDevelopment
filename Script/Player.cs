@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,15 +15,6 @@ public class Player : MonoBehaviour
     public Transform Projectile_Spawner;
     //Reference to projectile template for projectile spawning
     public GameObject projTemplate;
-    //Reference the spawn point
-    public Transform spawnPoint;
-    //Reference the Game Over Screen
-    public GameOverScreen gameOverScreen;
-    //Reference to Status
-    public Status status;
-    
-    // HealthBar
-    public HealthBar healthBar;
 
     /*
      * Variables
@@ -52,7 +43,6 @@ public class Player : MonoBehaviour
         health = 100;
         lives = 5;
         isDead = false;
-        healthBar.SetMaxHealth(health);
     }
 
     // Update is called once per frame
@@ -64,17 +54,18 @@ public class Player : MonoBehaviour
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
         PlayerDeathCheck();
-
-        if (Input.GetButtonDown("Fire1"))
+        if (PauseMenu.GameIsPaused == false)
         {
-            Shoot();
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Shoot();
+            }
         }
 
-        if (Input.GetKeyDown("escape")) 
+        if (Input.GetKeyDown("escape"))
         {
             Application.Quit();
         }
-        
     }
 
     void FixedUpdate()
@@ -94,40 +85,22 @@ public class Player : MonoBehaviour
         rb.AddForce(Projectile_Spawner.up * projForce, ForceMode2D.Impulse);
     }
 
-    void OnCollisionEnter2D(Collision2D col) 
+    void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag.Equals("Enemy")) 
+        if (col.gameObject.tag.Equals("Enemy"))
         {
             health -= 10;
-            PlayerDeathCheck();
             //DO SOMETHING TO MOVE ENEMY AWAY FROM PLAYER AFTER CONTACT
         }
     }
 
-    void PlayerDeathCheck() 
+    void PlayerDeathCheck()
     {
-        if (health <= 0) 
+        if (health <= 0)
         {
             isDead = true;
             health += 100;
             lives -= 1;
         }
-
-        if(lives <= 0) 
-        {
-            gameOverScreen.Setup(status.getScore());
-        } else if(isDead)
-        {
-            isDead = false;
-            transform.position = spawnPoint.position; 
-        }
     }
-    
-    // this is the take damage method
-    void TakeDamage(int damage)
-    {
-        health -= damage;
-        
-        healthBar.SetHealth(health);
-    }    
 }
