@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     public int currentHealth;
     //Variable for player lives
     public static int lives;
+    //Variable for player bombs
+    public int bombs;
     //Boolean for player death
     public static bool isDead;
     //Boolean for I-Frames
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         health = maxHealth;
         lives = 3;
+        bombs = 3;
         life1.gameObject.SetActive(true);
         life2.gameObject.SetActive(true);
         life3.gameObject.SetActive(true);
@@ -117,7 +120,19 @@ public class Player : MonoBehaviour
             {
                 Shoot();
             }
+            if (Input.GetButtonDown("Bomb") && bombs > 0)
+            {
+                killAllEnemies();
+            }
         }
+    }
+
+    private void killAllEnemies() 
+    {
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject go in gos)
+            Destroy(go);
+        bombs--;
     }
 
     void FixedUpdate()
