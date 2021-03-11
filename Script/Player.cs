@@ -65,9 +65,34 @@ public class Player : MonoBehaviour
 
     public GameObject life1, life2, life3;
 
+    //floats to handle player wraparound
+    public int buffer;
+    public float leftBound;
+    public float rightBound;
+    public float topBound;
+    public float bottomBound;
+    public float height;
+    public float width;
+    public float y;
+    public float x;
+
+    //float for automatic fire counter
+    public float fireCount;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        //Screen bounds and buffer for wraparound
+        buffer = 2;
+        height = 2f * cam.orthographicSize;
+        width = height * cam.aspect;
+        leftBound = 0 - width/2;
+        bottomBound = 0 - height/2;
+        topBound = 0 + height/2;
+        rightBound = 0 + width/2;
+
+        healthBar.SetHealth(maxHealth);
         healthBar.SetMaxHealth(maxHealth);
         health = maxHealth;
         lives = 3;
@@ -88,7 +113,28 @@ public class Player : MonoBehaviour
 
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        PlayerDeathCheck();
+        //Wraparound code
+        x = transform.position.x;
+        y = transform.position.y;
+
+        
+
+        if (x < leftBound - buffer) {
+            transform.position = new Vector3((rightBound + 1), transform.position.y, transform.position.z);
+        }
+
+        if (x > rightBound + buffer) {
+            transform.position = new Vector3((leftBound - 1), transform.position.y, transform.position.z);
+        }
+
+        if (y < bottomBound - buffer) {
+            transform.position = new Vector3(transform.position.x, (topBound + 1), transform.position.z);
+        }
+
+        if (y > topBound + buffer) {
+            transform.position = new Vector3(transform.position.x, (bottomBound - 1), transform.position.z);
+        }
+
         if (lives > 3)
             lives = 3;
         switch (lives)
@@ -116,9 +162,13 @@ public class Player : MonoBehaviour
         }
         if (!PauseMenu.GameIsPaused)
         {
-            if (Input.GetButtonDown("Fire1"))
-            {
-                Shoot();
+            if (Input.GetMouseButton (0)) {
+                fireCount += Time.deltaTime;
+                if (fireCount > 0.15f) 
+                {
+                    Shoot();
+                    fireCount = 0;
+                }
             }
             if (Input.GetButtonDown("Bomb") && bombs > 0)
             {
